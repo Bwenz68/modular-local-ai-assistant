@@ -1,0 +1,23 @@
+# WARN[0000] /home/bill/Projects/ai-assistant/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+# You can safely remove the 'version: "3.8"' line if it's at the top of your file.
+
+services:
+  assistant:
+    build: .
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    network_mode: "host" # Keep this to connect to Ollama on host
+    ports: # ADD THIS BLOCK - this maps container port 8501 to host port 8501
+      - "8501:8501"
+    volumes:
+      - ./assistant:/app/assistant # Mount your assistant code
+      - ./query_docs.py:/app/query_docs.py # Mount query_docs.py
+      - ./ingest_docs.py:/app/ingest_docs.py # Also good to mount this
+      - ./micromamba_env.yaml:/app/micromamba_env.yaml # Mount env file
+      - ./app.py:/app/app.py # ADD THIS LINE to mount your Streamlit app
+      - /mnt/ai-data:/data # Mount your external data SSD
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    # command: python -m assistant.main # COMMENT OUT OR REMOVE THIS LINE

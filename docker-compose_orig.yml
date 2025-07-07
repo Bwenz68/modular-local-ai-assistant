@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  assistant:
+    build:
+      context: .
+    network_mode: "host"
+    stdin_open: true # ADD THIS LINE
+    tty: true        # ADD THIS LINE
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - HF_HOME=/data/hf_cache
+      - ULTRALYTICS_HOME=/data/ultralytics_cache
+      - PIPER_VOICE_DIR=/data/piper_models
+    devices:
+      - /dev/snd                  # give container access to host mic/speakers
+    volumes:
+      - ./:/app                   # mount your local code into /app
+      - /mnt/ai-data:/data        # external SSD/HDD mount (models, FAISS, Piper)
+    ports:
+      - "8000:8000"               # placeholder for FastAPI UI

@@ -1,0 +1,16 @@
+services:
+  assistant:
+    build:
+      context: .
+    runtime: nvidia                      # 👈 Use this instead of device_requests
+    environment:
+      - HF_HOME=/data/hf_cache
+      - ULTRALYTICS_HOME=/data/ultralytics_cache
+      - PIPER_VOICE_DIR=/data/piper_models
+    devices:
+      - /dev/snd
+    volumes:
+      - ./:/app
+      - /mnt/ai-data:/data
+    ports:
+      - "8000:8000"
